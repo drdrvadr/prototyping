@@ -19,9 +19,4 @@ public class Cell : MonoBehaviour
             currentState = state;
         }
     }
-
-    public void ClearCell()
-    {
-        currentState = CellState.EMPTY;
-    }
 }

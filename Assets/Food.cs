@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Food : MonoBehaviour
 {
-    [SerializeField] private GameObject foodPrefab;
     public LevelGrid levelGrid;
 
     private void Start()
@@ -16,8 +15,15 @@ public class Food : MonoBehaviour
     public void Respawn()
     {
         var nextFoodCell = levelGrid.GetRandomCell();
-        transform.position = nextFoodCell.transform.position;
-        nextFoodCell.GetComponent<Cell>().OccupyCell(Cell.CellState.FOOD);
+        if (nextFoodCell.GetComponent<Cell>().currentState == Cell.CellState.EMPTY)
+        {
+            transform.position = nextFoodCell.transform.position;
+            nextFoodCell.GetComponent<Cell>().OccupyCell(Cell.CellState.FOOD);
+        }
+        else
+        {
+            Respawn();
+        }
         levelGrid.UpdateCellState();
     }
 }
