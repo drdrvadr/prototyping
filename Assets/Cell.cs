@@ -7,16 +7,8 @@ public class Cell : MonoBehaviour
         EMPTY,
         SNAKE,
         FOOD,
-        OBSTACLE
+        OBSTACLE //Пока не использую
     }
 
     public CellState currentState = CellState.EMPTY;
-
-    public void OccupyCell(CellState state)
-    {
-        if (currentState == CellState.EMPTY)
-        {
-            currentState = state;
-        }
-    }
 }

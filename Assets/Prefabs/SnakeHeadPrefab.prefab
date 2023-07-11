@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1545429292186375142}
   - component: {fileID: 1545429292186375140}
   m_Layer: 6
-  m_Name: Snakehead
+  m_Name: SnakeHeadPrefab
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

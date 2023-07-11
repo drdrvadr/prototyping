@@ -7,25 +7,33 @@ public class Snake : MonoBehaviour
 {
     [SerializeField]
     private GameObject snakePrefab;
+
+    [SerializeField]
+    private float moveCooldown = 0.3f;
+
+    [SerializeField]
+    private int startLength = 3;
+
     private TextMeshPro scoreText;
     private int score = 0;
-    public LevelGrid levelGrid;
-    public float moveCooldown = 0.3f;
-    public int startLength = 3;
-
+    private LevelGrid levelGrid;
     private List<Transform> snake = new List<Transform>();
     private GameObject food;
-    private GameObject nextCell;
     private Vector2 currentDirection = Vector2.zero;
     private Vector2 requestedDirection = Vector2.zero;
 
     private Vector3 headPosition;
 
-    private void Start()
+    private void Awake()
     {
         scoreText = GetComponentInChildren<TextMeshPro>();
-        food = FindObjectOfType<Food>().gameObject;
         levelGrid = FindObjectOfType<LevelGrid>();
+        food = FindObjectOfType<Food>().gameObject;
+        //то что можно прокинуть руками- лучше прокинуть руками_
+    }
+
+    private void Start()
+    {
         var startCell = levelGrid.GetRandomCell();
 
         transform.position = startCell.transform.position;
@@ -39,6 +47,7 @@ public class Snake : MonoBehaviour
         Debug.Log($"В змейке сейчас {snake.Count} сегмента!");
         levelGrid.UpdateCellState();
         InvokeRepeating(nameof(Move), 0, moveCooldown);
+        //переписать на апдейт.
     }
 
     public List<Transform> GetSnake()
@@ -81,23 +90,29 @@ public class Snake : MonoBehaviour
     private void Move()
     {
         if (IsValidDirection(requestedDirection))
-        {
             currentDirection = requestedDirection;
-        }
-        nextCell = levelGrid.GetNextCell(headPosition, currentDirection);
-        var nextPosition = nextCell.transform.position;
 
-        for (int i = snake.Count - 1; i > 0; i--)
+        if (levelGrid.GetNextCell(headPosition, currentDirection, out var nextCell))
         {
-            snake[i].position = snake[i - 1].position;
+            var nextPosition = nextCell.transform.position;
+
+            for (int i = snake.Count - 1; i > 0; i--)
+            {
+                snake[i].position = snake[i - 1].position;
+            }
+            snake[0].position = nextPosition;
+            headPosition = nextPosition;
+            TryCollectFood(nextCell);
+            levelGrid.UpdateCellState();
         }
-        snake[0].position = nextPosition;
-        headPosition = nextPosition;
-        TryCollectFood();
-        levelGrid.UpdateCellState();
+        else
+        {
+            Debug.Log("Выход за рамки");
+        }
+
     }
 
-    private void TryCollectFood()
+    private void TryCollectFood(GameObject nextCell)
     {
         if (nextCell.GetComponent<Cell>().currentState == Cell.CellState.FOOD)
         {
@@ -105,7 +120,6 @@ public class Snake : MonoBehaviour
             score++;
             UpdateScoreText();
             food.GetComponent<Food>().Respawn();
-            nextCell.GetComponent<Cell>().currentState = Cell.CellState.EMPTY;
         }
     }
 

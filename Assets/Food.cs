@@ -18,7 +18,6 @@ public class Food : MonoBehaviour
         if (nextFoodCell.GetComponent<Cell>().currentState == Cell.CellState.EMPTY)
         {
             transform.position = nextFoodCell.transform.position;
-            nextFoodCell.GetComponent<Cell>().OccupyCell(Cell.CellState.FOOD);
         }
         else
         {

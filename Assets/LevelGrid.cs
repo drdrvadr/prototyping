@@ -42,15 +42,25 @@ public class LevelGrid : MonoBehaviour
         return cellMatrix[Random.Range(0, dimentionX), Random.Range(0, dimentionY)];
     }
 
-    public GameObject GetNextCell(Vector3 currentPosition, Vector2 direction)
+    public bool GetNextCell(Vector3 currentPosition, Vector2 direction, out GameObject result)
     {
+        result = null;
         var nextX = Mathf.RoundToInt(currentPosition.x + direction.x);
         var nextY = Mathf.RoundToInt(currentPosition.y + direction.y);
+        if (nextX > dimentionX - 1 || nextX < 0)
+        {
+            return false;
+        }
+        if (nextY > dimentionY - 1 || nextY < 0)
+        {
+            return false;
+        }
 
-        nextX = Mathf.Clamp(nextX, 0, dimentionX - 1);
-        nextY = Mathf.Clamp(nextY, 0, dimentionY - 1);
+        result = cellMatrix[nextX, nextY];
+        return true;
 
-        return cellMatrix[nextX, nextY];
+        //использовать vector3int вместо раунд то инт.
+        //возврат ретёрн фолс когда выходим за пределы массива
     }
 
     public void UpdateCellState()
