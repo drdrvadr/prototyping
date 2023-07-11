@@ -15,7 +15,7 @@ public class Food : MonoBehaviour
     public void Respawn()
     {
         var nextFoodCell = levelGrid.GetRandomCell();
-        if (nextFoodCell.GetComponent<Cell>().currentState == Cell.CellState.EMPTY)
+        if (nextFoodCell.GetComponent<Cell>().currentState == CellState.EMPTY)
         {
             transform.position = nextFoodCell.transform.position;
         }

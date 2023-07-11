@@ -5,6 +5,7 @@ using UnityEngine;
 public class LevelGrid : MonoBehaviour
 {
     private List<Transform> snake;
+    [SerializeField]
     private Food food;
     public GameObject cellPrefab;
     public GameObject[,] cellMatrix;
@@ -15,7 +16,6 @@ public class LevelGrid : MonoBehaviour
     {
         CreateCellMatrix();
         snake = FindObjectOfType<Snake>().GetSnake();
-        food = FindObjectOfType<Food>();
     }
 
     private void CreateCellMatrix()
@@ -45,6 +45,7 @@ public class LevelGrid : MonoBehaviour
     public bool GetNextCell(Vector3 currentPosition, Vector2 direction, out GameObject result)
     {
         result = null;
+
         var nextX = Mathf.RoundToInt(currentPosition.x + direction.x);
         var nextY = Mathf.RoundToInt(currentPosition.y + direction.y);
         if (nextX > dimentionX - 1 || nextX < 0)
@@ -58,9 +59,7 @@ public class LevelGrid : MonoBehaviour
 
         result = cellMatrix[nextX, nextY];
         return true;
-
         //использовать vector3int вместо раунд то инт.
-        //возврат ретёрн фолс когда выходим за пределы массива
     }
 
     public void UpdateCellState()
@@ -68,9 +67,9 @@ public class LevelGrid : MonoBehaviour
         foreach (var cell in cellMatrix)
         {
             var currentState = cell.GetComponent<Cell>().currentState;
-            if (currentState != Cell.CellState.OBSTACLE)
+            if (currentState != CellState.OBSTACLE)
             {
-                cell.GetComponent<Cell>().currentState = Cell.CellState.EMPTY;
+                cell.GetComponent<Cell>().currentState = CellState.EMPTY;
             }
         }
 
@@ -81,7 +80,7 @@ public class LevelGrid : MonoBehaviour
                 Mathf.RoundToInt(segmentPosition.x),
                 Mathf.RoundToInt(segmentPosition.y)
             ];
-            cell.GetComponent<Cell>().currentState = Cell.CellState.SNAKE;
+            cell.GetComponent<Cell>().currentState = CellState.SNAKE;
         }
 
         var foodPosition = food.transform.position;
@@ -89,6 +88,6 @@ public class LevelGrid : MonoBehaviour
             Mathf.RoundToInt(foodPosition.x),
             Mathf.RoundToInt(foodPosition.y)
         ];
-        foodCell.GetComponent<Cell>().currentState = Cell.CellState.FOOD;
+        foodCell.GetComponent<Cell>().currentState = CellState.FOOD;
     }
 }
